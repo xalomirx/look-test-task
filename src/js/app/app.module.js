@@ -1,17 +1,39 @@
 angular.module("app", ["templates"])
+  .controller('DataController', ['$scope', ($scope) => {
+    $scope.test = 'kkek';
+  }])
   .directive("app", () => {
     return {
       scope: {},
       restrict: "E",
       templateUrl: "./js/app/app.tpl.html",
+      controller: ["$scope", dataCtrl],
     };
+
+    function dataCtrl($scope) {
+      $scope.model = {
+        items: makeDefaulData(),
+      }
+    }
   })
   .directive("contentView", () => {
     return {
-      scope: {},
+      scope: {
+        model: "="
+      },
       restrict: "E",
       templateUrl: "./js/app/content-view.tpl.html",
+      controller: ['$scope', contentViewCtrl],
     };
+
+    function contentViewCtrl($scope) {
+      $scope.sort = {
+        currentOrder: 'Title',
+        orderOptions: ['Title', 'Date'],
+        isOnlyDate: false,
+        searchQuery: '',
+      }
+    }
   })
   .directive("sidebarView", () => {
     return {
