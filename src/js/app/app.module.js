@@ -1,7 +1,4 @@
 angular.module("app", ["templates"])
-  .controller('DataController', ['$scope', ($scope) => {
-    $scope.test = 'kkek';
-  }])
   .directive("app", () => {
     return {
       scope: {},
@@ -13,6 +10,7 @@ angular.module("app", ["templates"])
     function dataCtrl($scope) {
       $scope.model = {
         items: makeDefaulData(),
+        selectedItemId: null,
       }
     }
   })
@@ -27,11 +25,42 @@ angular.module("app", ["templates"])
     };
 
     function contentViewCtrl($scope) {
-      $scope.sort = {
-        currentOrder: 'Title',
-        orderOptions: ['Title', 'Date'],
+      $scope.filter = {
+        currentOrder: 'title',
+        orderOptions: ['title', 'date'],
         isOnlyDate: false,
         searchQuery: '',
+      }
+
+      $scope.newItemTitle = '';
+
+      $scope.getCurrentDateFormat = () => {
+        const isOnlyDate = $scope.filter.isOnlyDate;
+        return isOnlyDate ? 'dd.mm.yyyy' : 'dd.mm.yyyy h:mm';
+      }
+
+      $scope.addNewItem = () => {
+        const newItemTitle = $scope.newItemTitle;
+
+        if (!newItemTitle.length) return;
+
+        const newItem = {
+          id: makeDataId(),
+          title: newItemTitle,
+          tags: [],
+          date: Date.now(),
+        }
+
+        $scope.model.items.push(newItem);
+        $scope.newItemTitle = '';
+      }
+
+      $scope.selectItem = (id) => {
+        $scope.selectedItemId = id;
+      }
+
+      $scope.isSelectedItem = (id) => {
+        return $scope.selectedItemId === id;
       }
     }
   })

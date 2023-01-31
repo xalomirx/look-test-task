@@ -1,6 +1,6 @@
 <some-1></some-1>
-<div class="content-view__ctrl">
-    <div class="content-view__order">
+<div class="content-view__ctrls">
+    <div class="content-view__order content-view__ctrls-item">
         <label
             class="content-view__order-label"
             for="orderSelect"
@@ -10,10 +10,10 @@
         <select
             class="content-view__order-select"
             name="orderSelect"
-            ng-model="sort.currentOrder"
+            ng-model="filter.currentOrder"
         >
             <option
-                ng-repeat="option in sort.orderOptions"
+                ng-repeat="option in filter.orderOptions"
                 value="{{ option }}"
             >
                 {{ option }}
@@ -21,31 +21,63 @@
         </select>
     </div>
 
-    <div class="content-view__date-format">
+    <div class="content-view__date-format content-view__ctrls-item">
         <label class="content-view__date-format-label">
             Only Date
             <input
                 class="content-view__date-formate-checkbox"
                 type="checkbox"
-                ng-model="sort.isOnlyDate"
+                ng-model="filter.isOnlyDate"
             >
         </label>
     </div>
 
-    <div class="content-view__search">
+    <div class="content-view__search content-view__ctrls-item">
         <label class="content-view__search-label">
             Search
             <input
                 class="content-view__search-input"
                 type="text"
-                ng-model="sort.searchQuery"
+                ng-model="filter.searchQuery"
             >
         </label>
     </div>
 </div>
-<ul class="content-view__items-list" ng-repeat="item in model.items">
-    <li class="content-view__item">
-        <span class="elements-view__item-title">Title: {{ item.title }}</span>
-        <span class="content-view__item-date">Date: {{ item.date }}</span>
+
+<ul
+    class="content-view__items-list"
+>
+    <li
+        class="content-view__item"
+        ng-click="selectItem(item.id)"
+        ng-class="{'content-view__item--selected': isSelectedItem(item.id)}"
+        ng-repeat="item in model.items |
+                   orderBy:filter.currentOrder |
+                   filter:filter.searchQuery as results track by item.title"
+    >
+        <span class="elements-view__item-title">
+            Title: {{ item.title }}
+        </span>
+        <span class="content-view__item-date">
+            Date: {{ item.date | date : getCurrentDateFormat() }}
+        </span>
     </li>
 </ul>
+
+<div class="content-view__add-block">
+    <form
+        class="content-view__add-form"
+        ng-submit="addNewItem()"
+    >
+        <label class="content-view__add-label">
+            Title:
+            <input
+                class="content-view__add-input"
+                type="text"
+                required
+                ng-model="newItemTitle"
+            >
+        </label>
+        <button type="submit">Add</button>
+    </form>
+</div>
