@@ -1,19 +1,44 @@
 angular.module("app", ["templates"])
-  .directive("app", () => {
+  .directive("app", ["$filter", () => {
     return {
       scope: {},
       restrict: "E",
       templateUrl: "./js/app/app.tpl.html",
-      controller: ["$scope", dataCtrl],
+      controller: ["$scope", "$filter", dataCtrl],
     };
 
-    function dataCtrl($scope) {
+    function dataCtrl($scope, $filter) {
       $scope.model = {
         items: makeDefaulData(),
         selectedItemId: null,
+        tagsList: [],
       }
+
+      $scope.setTagsList = () => {
+        const items = $scope.model.items;
+        const allTagsArr = [];
+
+        for (item of items) {
+          allTagsArr.push(item.tags);
+        }
+
+        const allTagsArrFlat = allTagsArr.flat();
+        const allUniqueTags = $filter('unique')(allTagsArrFlat);
+        $scope.model.tagsList = allUniqueTags;
+      }
+
+      $scope.setLastItem = () => {
+        const items = $scope.model.items;
+        const orderByDateItems = $filter('orderBy')(items, 'date');
+        const lastItemIndex = orderByDateItems.length - 1;
+        const lastItem = orderByDateItems[lastItemIndex];
+        $scope.model.lastItem = lastItem;
+      }
+
+      $scope.setTagsList();
+      $scope.setLastItem();
     }
-  })
+  }])
   .directive("contentView", () => {
     return {
       scope: {
@@ -36,7 +61,7 @@ angular.module("app", ["templates"])
 
       $scope.getCurrentDateFormat = () => {
         const isOnlyDate = $scope.model.filters.isOnlyDate;
-        return isOnlyDate ? 'dd.mm.yyyy' : 'dd.mm.yyyy h:mm';
+        return isOnlyDate ? 'dd.MM.yyyy' : 'dd.MM.yyyy HH:mm';
       }
 
       $scope.addNewItem = () => {
@@ -51,6 +76,7 @@ angular.module("app", ["templates"])
 
         $scope.model.items.push(newItem);
         $scope.model.newItemTitle = '';
+        $scope.model.lastItem = newItem;
       }
 
       $scope.selectItem = (id) => {
@@ -70,10 +96,10 @@ angular.module("app", ["templates"])
       restrict: "E",
       templateUrl: "./js/app/sidebar-view.tpl.html",
       controller: ['$scope', sidebarViewCtrl],
-      controllerAs: 'SC',
     };
 
     function sidebarViewCtrl($scope) {
+      console.log($scope);
       $scope.model.currentItem = undefined;
       $scope.model.newTagTitle = '';
 
@@ -101,6 +127,7 @@ angular.module("app", ["templates"])
 
         $scope.model.items[currentItemIndex].tags.push(newTagTitle);
         $scope.model.newTagTitle = '';
+        $scope.$parent.setTagsList();
       }
 
       $scope.$watch('model.selectedItemId', setCurrentItem);
@@ -108,6 +135,7 @@ angular.module("app", ["templates"])
       $scope.removeTag = (index) => {
         const currentItemIndex = findCurrentItemIndex();
         $scope.model.items[currentItemIndex].tags.splice(index, 1);
+        $scope.$parent.setTagsList();
       }
     }
   })
@@ -135,30 +163,58 @@ angular.module("app", ["templates"])
   })
   .directive("some1", () => {
     return {
-      scope: {},
+      scope: {
+        model: "="
+      },
       restrict: "E",
-      template: "<some-2></some-2>",
+      template: "<some-2 model='model'></some-2>",
     };
   })
   .directive("some2", () => {
     return {
-      scope: {},
+      scope: {
+        model: "="
+      },
       restrict: "E",
-      template: "<some-3></some-3>",
+      template: "<some-3 model='model'></some-3>",
     };
   })
   .directive("some3", () => {
     return {
-      scope: {},
+      scope: {
+        model: "="
+      },
       restrict: "E",
-      template: "<summary-view></summary-view>",
+      template: "<summary-view model='model'></summary-view>",
     };
   })
   .directive("summaryView", () => {
     return {
-      scope: {},
+      scope: {
+        model: "="
+      },
       restrict: "E",
       templateUrl: "./js/app/summary-view.tpl.html",
+      controller: ['$scope', summaryViewCtrl],
     };
-  });
+
+    function summaryViewCtrl($scope) {
+    }
+  })
+  .filter("unique", () => {
+    return function(items) {
+      if (!items.length) return items;
+
+      const uniqueItems = [];
+
+      for (itemIndex in items) {
+        const item = items[itemIndex];
+        if (!uniqueItems.includes(item)) {
+          uniqueItems.push(item);
+        }
+      }
+
+      return uniqueItems;
+    }
+  })
 

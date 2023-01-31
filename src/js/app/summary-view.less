@@ -1,0 +1,28 @@
+@import "variables";
+
+summary-view {
+  display: block;
+  padding: 10px;
+  border-bottom: 1px solid @c-gray;
+}
+
+.summary-view {
+  &__block-title {
+    margin-bottom: 10px;
+  }
+
+  &__tags-list {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  &__tag-item {
+    margin-right: 5px;      
+    
+    &:last-child {
+      margin: 0;
+    }
+  }
+}

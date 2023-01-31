@@ -35,5 +35,3 @@ function makeDefaulData() {
     }
   ];
 }
-
-// export { makeDefaulData };

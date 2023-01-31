@@ -1,1 +1,15 @@
-Summary
+<span class="summary-view__last-item">
+    Last: {{ model.lastItem.title }}
+</span>
+<div class="summary-view__tags-block">
+    <span class="summary-view__block-title">Tags:</span>
+
+    <ul class="summary-view__tags-list">
+        <li
+            class="summary-view__tag-item"
+            ng-repeat="tag in model.tagsList track by $index"
+        >
+            {{ tag }}
+        </li>
+    </ul>
+</div>
