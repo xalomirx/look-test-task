@@ -1,1 +1,46 @@
-Sidebar
+<div class="sidebar-view" ng-if="model.currentItem">
+    <span class="sidebar-view__item-title">
+        Selected: {{ model.currentItem.title }}
+    </span>
+
+    <div class="sidebar-view__item-tags-block">
+        <span class="sidebar-view__tags-block-title">
+            Tags:
+        </span>
+
+        <ul class="sidebar-view__item-tags-list">
+            <li
+                class="sidebar-view__item-tag"
+                ng-repeat="tag in model.currentItem.tags track by $index"
+            >
+                <span class="sidebar-view__tag-title">
+                    {{ tag }}
+                </span>
+                <button
+                    class="sidebar-view__tag-remove-btn"
+                    ng-click="removeTag($index)"
+                >
+                    X
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="sidebar-view__add-block">
+        <form
+            class="sidebar-view__add-form"
+            ng-submit="addNewTag()"
+        >
+            <label class="sidebar-view__add-label">
+                Title:
+                <input
+                    class="sidebar-view__add-input"
+                    type="text"
+                    ng-model="model.newTagTitle"
+                    required
+                >
+            </label>
+            <button class="sidebar-view__add-btn" type="submit">Add</button>
+        </form>
+    </div>
+</div>

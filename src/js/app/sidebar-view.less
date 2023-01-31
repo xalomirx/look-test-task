@@ -8,3 +8,32 @@ sidebar-view {
   border-left: @border-size solid @c-gray;
   box-sizing: border-box;
 }
+
+.sidebar-view {
+  &__item-title {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  &__tags-block-title {
+    display: block;
+    padding-bottom: 10px;
+    border-bottom: 1px solid @c-gray;
+  }
+
+  &__item-tags-list {
+    margin: 0 0 15px;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  &__item-tag {
+    padding: 4px 0;
+    border-bottom: 1px solid @c-gray;
+  }
+
+  &__tag-remove-btn,
+  &__add-btn {
+    cursor: pointer;
+  }
+}

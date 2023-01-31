@@ -10,10 +10,10 @@
         <select
             class="content-view__order-select"
             name="orderSelect"
-            ng-model="filter.currentOrder"
+            ng-model="model.filters.currentOrder"
         >
             <option
-                ng-repeat="option in filter.orderOptions"
+                ng-repeat="option in model.filters.orderOptions"
                 value="{{ option }}"
             >
                 {{ option }}
@@ -27,7 +27,7 @@
             <input
                 class="content-view__date-formate-checkbox"
                 type="checkbox"
-                ng-model="filter.isOnlyDate"
+                ng-model="model.filters.isOnlyDate"
             >
         </label>
     </div>
@@ -38,7 +38,7 @@
             <input
                 class="content-view__search-input"
                 type="text"
-                ng-model="filter.searchQuery"
+                ng-model="model.filters.searchQuery"
             >
         </label>
     </div>
@@ -52,8 +52,8 @@
         ng-click="selectItem(item.id)"
         ng-class="{'content-view__item--selected': isSelectedItem(item.id)}"
         ng-repeat="item in model.items |
-                   orderBy:filter.currentOrder |
-                   filter:filter.searchQuery as results track by item.title"
+                   orderBy:model.filters.currentOrder |
+                   filter:model.filters.searchQuery as results track by item.title"
     >
         <span class="elements-view__item-title">
             Title: {{ item.title }}
@@ -75,7 +75,7 @@
                 class="content-view__add-input"
                 type="text"
                 required
-                ng-model="newItemTitle"
+                ng-model="model.newItemTitle"
             >
         </label>
         <button type="submit">Add</button>
