@@ -25,8 +25,32 @@ gulp.task("templates", () =>
 );
 
 gulp.task("main", () =>
-  gulp.src("./src/js/**/*.js")
+  gulp.src("./src/js/*.js")
     .pipe(require("gulp-concat")("main.js"))
+    .pipe(gulp.dest("./dist/js/"))
+);
+
+gulp.task("appModule", () =>
+  gulp.src("./src/js/app/app.module.js")
+    .pipe(require("gulp-concat")("app.module.js"))
+    .pipe(gulp.dest("./dist/js/"))
+);
+
+gulp.task("modules", () =>
+  gulp.src("./src/js/app/modules/**/*.module.js")
+    .pipe(require("gulp-concat")("modules.js"))
+    .pipe(gulp.dest("./dist/js/"))
+);
+
+gulp.task("directives", () =>
+  gulp.src("./src/js/app/modules/**/*.dir.js")
+    .pipe(require("gulp-concat")("directives.js"))
+    .pipe(gulp.dest("./dist/js/"))
+);
+
+gulp.task("controllers", () =>
+  gulp.src("./src/js/app/modules/**/*.ctrl.js")
+    .pipe(require("gulp-concat")("controllers.js"))
     .pipe(gulp.dest("./dist/js/"))
 );
 
@@ -60,6 +84,10 @@ gulp.task("default", gulp.series(
     "vendor",
     "templates",
     "main",
+    "appModule",
+    "modules",
+    "directives",
+    "controllers",
     "style",
     "index",
     "assets",
